@@ -69,16 +69,8 @@ const PullRequestTable = ({ isoStartDate, isoEndDate, refreshKey }) => {
   }, [isoStartDate, isoEndDate]);
 
   useEffect(() => {
-    // Create ref to track if component is mounted
-    let isMounted = true;
-    
     // Immediately invoke async function
     fetchPRData();
-    
-    // Cleanup function
-    return () => {
-      isMounted = false;
-    };
   }, [fetchPRData, refreshKey]);
 
   // Retry handler for error state

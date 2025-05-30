@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { fetchSummary, createCancellationToken } from '../../services/api';
 import MetricCard from './MetricCard';
-import { formatCycleTime } from '../../utils/formatUtils';
+
 import { StateWrapper, MetricsLoadingSkeleton } from '../shared/ui/StateComponents';
 import MixedChart from '../Contributors/charts/MixedChart';
 import { 
@@ -271,16 +271,8 @@ const DashboardOverview = ({ startDate, endDate, isoStartDate, isoEndDate, refre
   }, [isoStartDate, isoEndDate]);
 
   useEffect(() => {
-    // Create ref to track if component is mounted
-    let isMounted = true;
-    
     // Immediately invoke async function
     fetchDashboardData();
-    
-    // Cleanup function
-    return () => {
-      isMounted = false;
-    };
   }, [fetchDashboardData, refreshKey]);
 
   // Retry handler for error state
@@ -335,10 +327,7 @@ const DashboardOverview = ({ startDate, endDate, isoStartDate, isoEndDate, refre
     </div>
   ), [summaryData]);
 
-  // Custom placeholder for loading state
-  const loadingPlaceholder = useMemo(() => (
-    <MetricsLoadingSkeleton count={5} />
-  ), []);
+
 
   // Prepare repo summary chart data
   const repoSummaryChart = useMemo(() => {

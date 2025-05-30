@@ -43,16 +43,8 @@ const useContributorData = (isoStartDate, isoEndDate, refreshKey) => {
   }, [isoStartDate, isoEndDate]);
 
   useEffect(() => {
-    // Create ref to track if component is mounted
-    let isMounted = true;
-    
     // Immediately invoke async function
     fetchData();
-    
-    // Cleanup function
-    return () => {
-      isMounted = false;
-    };
   }, [fetchData, refreshKey]);
 
   return {
