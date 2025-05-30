@@ -1,0 +1,90 @@
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  background-color: #fff;
+  border-bottom: 1px solid #e1e4e8;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo svg {
+  width: 32px;
+  height: 32px;
+}
+
+.logo h1 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px; /* Adjust gap as needed */
+}
+
+.date-picker-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.refresh-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+}
+
+.refresh-btn:hover {
+  background-color: #f0f0f0;
+}
+
+.refresh-icon {
+  width: 20px;
+  height: 20px;
+  color: #6e6e6e;
+}
+
+@media screen and (max-width: 768px) {
+  .app-header {
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px;
+  }
+  
+  .logo-container, .date-picker-container {
+    width: 100%;
+  }
+  
+  .date-picker-container {
+    justify-content: flex-end;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .logo h1 {
+    font-size: 18px;
+  }
+  
+  .date-picker-container {
+    justify-content: flex-start;
+  }
+}
