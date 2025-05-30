@@ -11,7 +11,7 @@ import { prepareCollaboratorsData, chartConfigs, chartColors } from '../utils/ch
  */
 const CollaboratorsSection = ({ collaborators }) => {
   // Prepare data for chart with memoization
-  const { chartData, legendData, hasData } = useMemo(() => 
+  const { chartData, legendData } = useMemo(() => 
     prepareCollaboratorsData(
       collaborators, 
       chartColors.collaboratorsColors

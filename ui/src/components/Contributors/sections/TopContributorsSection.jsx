@@ -11,7 +11,7 @@ import { prepareTopContributorsData, chartConfigs, chartColors } from '../utils/
  */
 const TopContributorsSection = ({ impactfulContributors }) => {
   // Prepare data for chart with memoization
-  const { chartData, legendData, hasData } = useMemo(() => 
+  const { chartData, legendData } = useMemo(() => 
     prepareTopContributorsData(
       impactfulContributors, 
       chartColors.contributorsColors

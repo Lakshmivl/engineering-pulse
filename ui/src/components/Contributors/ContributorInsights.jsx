@@ -1,5 +1,5 @@
 import React from 'react';
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, ArcElement, Title, Tooltip, Legend, LineElement, PointElement } from 'chart.js';
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, ArcElement, Title, Tooltip, Legend, LineElement, PointElement, BarController, LineController, DoughnutController } from 'chart.js';
 import './Contributors.css';
 
 // Import custom hooks
@@ -17,7 +17,7 @@ import QualityChampionsSection from './sections/QualityChampionsSection';
 import { StateWrapper } from '../shared/ui/StateComponents';
 
 // Register required Chart.js components
-ChartJS.register(CategoryScale, LinearScale, BarElement, ArcElement, LineElement, PointElement, Title, Tooltip, Legend);
+ChartJS.register(CategoryScale, LinearScale, BarElement, ArcElement, LineElement, PointElement, Title, Tooltip, Legend, BarController, LineController, DoughnutController);
 
 /**
  * ContributorInsights component for displaying contributor metrics

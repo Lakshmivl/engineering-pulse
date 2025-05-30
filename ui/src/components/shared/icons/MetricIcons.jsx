@@ -77,7 +77,7 @@ export const MetricIcon = ({ iconType, color = "#4169e1", size = 24 }) => {
   }
 };
 
-export default {
+const MetricIconsExport = {
   TotalPRsIcon,
   PRsMergedIcon,
   CycleTimeIcon,
@@ -87,3 +87,5 @@ export default {
   PRSizeIcon,
   MetricIcon
 };
+
+export default MetricIconsExport;

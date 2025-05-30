@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 
 /**
  * Custom hook for managing table filters
@@ -18,19 +18,8 @@ const useTableFilters = (data) => {
   const [showFilters, setShowFilters] = useState(false);
   const [filteredData, setFilteredData] = useState([]);
 
-  // Filter logic
-  useEffect(() => {
-    applyFilters(filterState, searchFilters);
-  }, [data, filterState, searchFilters]);
-
-  // Check if any filters are active
-  const hasActiveFilters = useMemo(() => {
-    return filterState !== 'All' || 
-      Object.values(searchFilters).some(value => value !== '');
-  }, [filterState, searchFilters]);
-
   // Apply filters to data
-  const applyFilters = (state, searches) => {
+  const applyFilters = useCallback((state, searches) => {
     if (!data || !Array.isArray(data)) {
       setFilteredData([]);
       return;
@@ -55,7 +44,18 @@ const useTableFilters = (data) => {
     });
     
     setFilteredData(filtered);
-  };
+  }, [data]);
+
+  // Filter logic
+  useEffect(() => {
+    applyFilters(filterState, searchFilters);
+  }, [data, filterState, searchFilters, applyFilters]);
+
+  // Check if any filters are active
+  const hasActiveFilters = useMemo(() => {
+    return filterState !== 'All' || 
+      Object.values(searchFilters).some(value => value !== '');
+  }, [filterState, searchFilters]);
 
   // Handle state filter change
   const handleStateFilterChange = (state) => {

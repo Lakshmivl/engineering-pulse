@@ -17,8 +17,10 @@ export {
 };
 
 // You can also export default configuration
-export default {
+const config = {
   apiConfig,
   envConfig,
   mockConfig
 };
+
+export default config;
