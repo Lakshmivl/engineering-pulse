@@ -144,11 +144,6 @@ The Engineering Pulse dashboard uses intuitive visual indicators to help teams q
 - **Trend Analysis**: Charts and graphs show progress over time, helping teams track improvement
 - **Comparison Views**: See how different repositories or team members compare
 
-![Engineering Pulse PR Review Queue](images/pr-review-queue.png)
-
-![Engineering Pulse Contributor Details](images/contributor-details.png)
-
-
 ## Data Flow
 
 The system organizes data in DynamoDB with the following structure:
