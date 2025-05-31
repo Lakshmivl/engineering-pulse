@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Redirecting...</title>
+    <script>
+        // Get the current path from the URL
+        const path = window.location.pathname;
+        
+        // Redirect to the main index.html with the path as a query parameter
+        // This allows React Router to handle the routing on the client side
+        window.location.href = '/index.html?redirect=' + encodeURIComponent(path + window.location.search + window.location.hash);
+    </script>
+</head>
+<body>
+    <p>Redirecting...</p>
+</body>
+</html>

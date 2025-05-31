@@ -23,7 +23,6 @@
     "test": "jest",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "deploy:s3": "aws s3 sync build/ s3://honorstack-ui --delete"
   },
   "eslintConfig": {
     "extends": [
