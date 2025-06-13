@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { fetchPRTable, createCancellationToken } from '../../services/api';
 import { StateWrapper } from '../shared/ui/StateComponents';
 import TableFilters from './components/TableFilters';
@@ -21,6 +21,12 @@ const PullRequestTable = ({ isoStartDate, isoEndDate, refreshKey }) => {
   const [tableData, setTableData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [autoRefreshIndicator, setAutoRefreshIndicator] = useState(false);
+  const [lastRefreshTime, setLastRefreshTime] = useState(null);
+  
+  // Refs for interval and timeout management
+  const autoRefreshIntervalRef = useRef(null);
+  const autoRefreshTimeoutRef = useRef(null);
 
   // Use custom hooks for filtering and sorting
   const {
@@ -40,12 +46,16 @@ const PullRequestTable = ({ isoStartDate, isoEndDate, refreshKey }) => {
 
   /**
    * Fetch PR data from API
+   * @param {boolean} isAutoRefresh - Whether this is an automatic refresh
    */
-  const fetchPRData = useCallback(async () => {
+  const fetchPRData = useCallback(async (isAutoRefresh = false) => {
     let cancelToken = null;
     
     try {
-      setLoading(true);
+      // Only show loading spinner if it's not an auto-refresh
+      if (!isAutoRefresh) {
+        setLoading(true);
+      }
       
       // Create a cancellation token for this request
       const cancellation = createCancellationToken();
@@ -60,11 +70,30 @@ const PullRequestTable = ({ isoStartDate, isoEndDate, refreshKey }) => {
       
       setTableData(Array.isArray(data) ? data : []);
       setError(null);
+      setLastRefreshTime(new Date());
+      
+      // Show auto-refresh indicator if this was an automatic refresh
+      if (isAutoRefresh) {
+        // Clear any existing timeout
+        if (autoRefreshTimeoutRef.current) {
+          clearTimeout(autoRefreshTimeoutRef.current);
+        }
+        
+        setAutoRefreshIndicator(true);
+        
+        // Set new timeout to hide the indicator
+        autoRefreshTimeoutRef.current = setTimeout(() => {
+          setAutoRefreshIndicator(false);
+          autoRefreshTimeoutRef.current = null;
+        }, 3000);
+      }
     } catch (err) {
       console.error('Error fetching PR table data:', err);
       setError('Failed to fetch PR data. Please try again later.');
     } finally {
-      setLoading(false);
+      if (!isAutoRefresh) {
+        setLoading(false);
+      }
     }
   }, [isoStartDate, isoEndDate]);
 
@@ -73,9 +102,67 @@ const PullRequestTable = ({ isoStartDate, isoEndDate, refreshKey }) => {
     fetchPRData();
   }, [fetchPRData, refreshKey]);
 
+  // Set up auto-refresh interval for PR table
+  useEffect(() => {
+    // Clear existing interval if any
+    if (autoRefreshIntervalRef.current) {
+      clearInterval(autoRefreshIntervalRef.current);
+    }
+
+    // Set up new interval for auto-refresh every 10 minutes (600,000 ms)
+    autoRefreshIntervalRef.current = setInterval(() => {
+      // Only auto-refresh if there's no error and we have data
+      if (!error && tableData.length > 0) {
+        fetchPRData(true); // Pass true to indicate this is an auto-refresh
+      }
+    }, 600000); // 10 minutes
+
+    // Cleanup interval and timeout on component unmount or when dependencies change
+    return () => {
+      if (autoRefreshIntervalRef.current) {
+        clearInterval(autoRefreshIntervalRef.current);
+      }
+      if (autoRefreshTimeoutRef.current) {
+        clearTimeout(autoRefreshTimeoutRef.current);
+      }
+    };
+  }, [fetchPRData, error, tableData.length]);
+
   // Retry handler for error state
   const handleRetry = () => {
     fetchPRData();
+  };
+
+  // Helper function to format time for display
+  const formatLastRefreshTime = (date) => {
+    return date.toLocaleTimeString('en-US', { 
+      hour12: true, 
+      hour: 'numeric', 
+      minute: '2-digit' 
+    });
+  };
+
+  // Render auto-refresh indicator
+  const renderAutoRefreshIndicator = () => {
+    // Don't show anything if we don't have a last refresh time yet
+    if (!lastRefreshTime) {
+      return null;
+    }
+
+    return (
+      <div className="auto-refresh-status">
+        {autoRefreshIndicator && (
+          <div className="auto-refresh-notification">
+            <span className="refresh-icon">🔄</span>
+            PR data refreshed automatically
+          </div>
+        )}
+        <div className="last-refresh-time">
+          Last updated: {formatLastRefreshTime(lastRefreshTime)}
+          <span className="auto-refresh-info"> (Auto-refreshes every 10 minutes)</span>
+        </div>
+      </div>
+    );
   };
 
   // Render the table content - extracted for better readability
@@ -112,6 +199,7 @@ const PullRequestTable = ({ isoStartDate, isoEndDate, refreshKey }) => {
       >
         {tableData.length > 0 && (
           <>
+            {renderAutoRefreshIndicator()}
             <TableFilters
               showFilters={showFilters}
               toggleFilters={toggleFilters}
