@@ -18,14 +18,13 @@ export const formatDateToISO = (date) => {
 };
 
 /**
- * Returns a date range with the current date as end date and
- * 30 days prior as start date (default)
+ * Returns a date range with both start and end dates set to today's date (current date)
  * @returns {Object} - Object containing start and end dates
  */
 export const getDefaultDateRange = () => {
-  const endDate = new Date();
-  const startDate = new Date();
-  startDate.setDate(endDate.getDate() - 30); // 30 days before today
+  const today = new Date();
+  const startDate = new Date(today);
+  const endDate = new Date(today);
   
   return {
     startDate,
