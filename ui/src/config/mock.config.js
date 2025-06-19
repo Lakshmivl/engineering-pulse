@@ -155,10 +155,83 @@ const MOCK_CONTRIBUTORS = {
   ]
 };
 
+// Mock CICD data matching the API contract
+const MOCK_CICD = {
+  slowest_build_repo: {
+    repo: "sap-commerce",
+    avg_build_time_mins: 17.5
+  },
+  longest_pipeline_repo: {
+    repo: "aem-core",
+    avg_total_pipeline_time_mins: 28.9
+  },
+  pipeline_success_rate: {
+    total_runs: 150,
+    successful_runs: 132,
+    success_percentage: 88
+  },
+  build_failure_rate: {
+    total_builds: 150,
+    failed_builds: 18,
+    failure_percentage: 12
+  },
+  stage_breakdown: [
+    {
+      repo: "sap-commerce",
+      stages: {
+        build: 12.5,
+        sonar: 2.1,
+        unit_test: 3.2,
+        deploy: 4.7
+      }
+    },
+    {
+      repo: "aem-core",
+      stages: {
+        build: 15.2,
+        sonar: 1.8,
+        unit_test: 2.9,
+        deploy: 9.0
+      }
+    },
+    {
+      repo: "react-frontend",
+      stages: {
+        build: 8.1,
+        sonar: 1.2,
+        unit_test: 1.8,
+        deploy: 2.3
+      }
+    }
+  ],
+  stage_causing_most_failures: {
+    stage: "unit_test",
+    failure_count: 14,
+    failure_percentage: 35.0
+  },
+  build_trends: [
+    { repo: "aem-core", week: "2025-W15", avg_build_time: 15.2, trend_direction: "up" },
+    { repo: "aem-core", week: "2025-W16", avg_build_time: 14.8, trend_direction: "down" },
+    { repo: "react-frontend", week: "2025-W15", avg_build_time: 8.5, trend_direction: "up" },
+    { repo: "react-frontend", week: "2025-W16", avg_build_time: 8.1, trend_direction: "down" },
+    { repo: "sap-commerce", week: "2025-W15", avg_build_time: 18.2, trend_direction: "up" },
+    { repo: "sap-commerce", week: "2025-W16", avg_build_time: 17.5, trend_direction: "down" }
+  ],
+  pipeline_trends: [
+    { repo: "aem-core", week: "2025-W15", avg_pipeline_time: 29.5, trend_direction: "up" },
+    { repo: "aem-core", week: "2025-W16", avg_pipeline_time: 28.9, trend_direction: "down" },
+    { repo: "react-frontend", week: "2025-W15", avg_pipeline_time: 13.8, trend_direction: "stable" },
+    { repo: "react-frontend", week: "2025-W16", avg_pipeline_time: 13.4, trend_direction: "down" },
+    { repo: "sap-commerce", week: "2025-W15", avg_pipeline_time: 23.1, trend_direction: "up" },
+    { repo: "sap-commerce", week: "2025-W16", avg_pipeline_time: 22.5, trend_direction: "down" }
+  ]
+};
+
 export const mockConfig = {
   MOCK_SUMMARY,
   MOCK_PR_TABLE,
   MOCK_CONTRIBUTORS,
+  MOCK_CICD,
   
   // Function to simulate API delay
   getWithDelay: (mockData, delayMs = 100) => {

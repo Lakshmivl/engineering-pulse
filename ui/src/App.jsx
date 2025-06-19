@@ -5,6 +5,7 @@ import Navigation from './components/Navigation/Navigation';
 import DashboardOverview from './components/Dashboard/DashboardOverview';
 import ContributorInsights from './components/Contributors/ContributorInsights';
 import PullRequestTable from './components/PullRequests/PullRequestTable';
+import CICDMetrics from './components/CICDMetrics/CICDMetrics';
 import { getDefaultDateRange, formatDateToISO } from './utils/dateUtils';
 import './App.css';
 
@@ -87,6 +88,16 @@ function App() {
             path="/pullrequests" 
             element={
               <PullRequestTable 
+                isoStartDate={isoStartDate}
+                isoEndDate={isoEndDate}
+                refreshKey={refreshKey}
+              />
+            } 
+          />
+          <Route 
+            path="/cicd-metrics" 
+            element={
+              <CICDMetrics 
                 isoStartDate={isoStartDate}
                 isoEndDate={isoEndDate}
                 refreshKey={refreshKey}

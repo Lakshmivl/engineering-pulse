@@ -12,14 +12,16 @@ export const apiConfig = {
   ENDPOINTS: {
     PR_TABLE: '/api/pr-metrics/table',
     CONTRIBUTORS: '/api/pr-metrics/contributors',
-    SUMMARY: '/api/pr-metrics/summary'
+    SUMMARY: '/api/pr-metrics/summary',
+    CICD: '/api/pr-metrics/cicd'
   },
 
   // Request types for API parameters
   REQUEST_TYPES: {
     PR_DETAILS: 'prdetails',
     CONTRIBUTORS: 'contributors',
-    SUMMARY: 'summary'
+    SUMMARY: 'summary',
+    CICD_METRICS: 'cicdmetrics'
   }
 };
 

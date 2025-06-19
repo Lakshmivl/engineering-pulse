@@ -8,10 +8,11 @@ import './Dashboard.css';
  * @param {string} props.title - Title of the metric
  * @param {string|number} props.value - Value of the metric
  * @param {React.ReactNode} props.icon - Icon for the metric
+ * @param {string} props.className - Additional CSS class for styling
  */
-const MetricCard = ({ title, value, icon = null }) => {
+const MetricCard = ({ title, value, icon = null, className = '' }) => {
   return (
-    <div className="metric-card">
+    <div className={`metric-card ${className}`}>
       <div className="metric-icon">
         {icon}
       </div>
@@ -26,7 +27,8 @@ const MetricCard = ({ title, value, icon = null }) => {
 MetricCard.propTypes = {
   title: PropTypes.string.isRequired,
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-  icon: PropTypes.node
+  icon: PropTypes.node,
+  className: PropTypes.string
 };
 
 export default MetricCard;

@@ -5,7 +5,7 @@ import { apiConfig, envConfig, mockConfig } from '../config';
 // Import necessary configs
 const { BASE_URL, ENDPOINTS, REQUEST_TYPES } = apiConfig;
 const { CURRENT_ENV } = envConfig;
-const { MOCK_SUMMARY, MOCK_PR_TABLE, MOCK_CONTRIBUTORS, getWithDelay } = mockConfig || {};
+const { MOCK_SUMMARY, MOCK_PR_TABLE, MOCK_CONTRIBUTORS, MOCK_CICD, getWithDelay } = mockConfig || {};
 
 /**
  * Create a configured axios instance for making API requests
@@ -192,6 +192,48 @@ export const fetchSummary = async (startDate, endDate, options = {}) => {
     }
     
     console.error('Error fetching summary data:', error);
+    throw error;
+  }
+};
+
+/**
+ * Fetches CI/CD metrics data
+ * @param {string} startDate - Start date in ISO format
+ * @param {string} endDate - End date in ISO format
+ * @param {object} options - Additional options
+ * @param {object} [options.cancelToken] - Cancellation token for the request
+ * @returns {Promise} - Promise resolving to CICD metrics data
+ */
+export const fetchCICDMetrics = async (startDate, endDate, options = {}) => {
+  try {
+    // Return mock data if mock responses are enabled
+    if (CURRENT_ENV.mockResponses) {
+      console.log('Using mock data for CICD metrics');
+      return await getWithDelay(MOCK_CICD);
+    }
+    
+    // Convert dates to compact format YYYYMMDD
+    const compactStartDate = formatDateToCompact(startDate);
+    const compactEndDate = formatDateToCompact(endDate);
+    
+    const response = await apiClient.get(ENDPOINTS.CICD, {
+      params: {
+        startDate: compactStartDate,
+        endDate: compactEndDate,
+        reqType: REQUEST_TYPES.CICD_METRICS
+      },
+      cancelToken: options.cancelToken
+    });
+    
+    return response.data;
+  } catch (error) {
+    // Handle axios cancellation separately - don't treat as an error
+    if (axios.isCancel(error)) {
+      console.log('Request canceled:', error.message);
+      return { canceled: true };
+    }
+    
+    console.error('Error fetching CICD metrics data:', error);
     throw error;
   }
 };
