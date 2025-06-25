@@ -6,6 +6,7 @@ import DashboardOverview from './components/Dashboard/DashboardOverview';
 import ContributorInsights from './components/Contributors/ContributorInsights';
 import PullRequestTable from './components/PullRequests/PullRequestTable';
 import CICDMetrics from './components/CICDMetrics/CICDMetrics';
+import QEMetrics from './components/QEMetrics/QEMetrics';
 import { getDefaultDateRange, formatDateToISO } from './utils/dateUtils';
 import './App.css';
 
@@ -98,6 +99,16 @@ function App() {
             path="/cicd-metrics" 
             element={
               <CICDMetrics 
+                isoStartDate={isoStartDate}
+                isoEndDate={isoEndDate}
+                refreshKey={refreshKey}
+              />
+            } 
+          />
+          <Route 
+            path="/qe-metrics" 
+            element={
+              <QEMetrics 
                 isoStartDate={isoStartDate}
                 isoEndDate={isoEndDate}
                 refreshKey={refreshKey}

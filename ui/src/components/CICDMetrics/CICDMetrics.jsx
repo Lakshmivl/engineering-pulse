@@ -106,141 +106,12 @@ const CICDMetrics = ({ isoStartDate, isoEndDate, refreshKey }) => {
               />
             </div>
 
-            {/* Build and Pipeline Duration Charts Row */}
-            <div className="cicd-charts-container">
-              {/* Average Build Duration by Repository Chart */}
-              <Widget 
-                title="Average Build Duration by Repository" 
-                subtitle="Measured in minutes per pipeline run"
-                className="cicd-chart-widget"
-              >
-                {transformedData.buildDurationsChart && (
-                  <div className="horizontal-bar-chart">
-                    <canvas 
-                      ref={(canvas) => {
-                        if (canvas && transformedData.buildDurationsChart) {
-                          const ctx = canvas.getContext('2d');
-                          // Clear any existing chart
-                          if (canvas.chart) {
-                            canvas.chart.destroy();
-                          }
-                          // Create new chart
-                          canvas.chart = new ChartJS(ctx, {
-                            type: 'bar',
-                            data: transformedData.buildDurationsChart,
-                            options: {
-                              responsive: true,
-                              maintainAspectRatio: false,
-                              scales: {
-                                x: {
-                                  grid: {
-                                    display: false
-                                  },
-                                  title: {
-                                    display: true,
-                                    text: 'Repository'
-                                  }
-                                },
-                                y: {
-                                  beginAtZero: true,
-                                  title: {
-                                    display: true,
-                                    text: 'Duration (minutes)'
-                                  }
-                                }
-                              },
-                              plugins: {
-                                legend: {
-                                  display: false
-                                },
-                                tooltip: {
-                                  callbacks: {
-                                    label: function(context) {
-                                      return `${context.parsed.y}m`;
-                                    }
-                                  }
-                                }
-                              }
-                            }
-                          });
-                        }
-                      }}
-                      height="300"
-                    />
-                  </div>
-                )}
-              </Widget>
-
-              {/* Longest Running Pipeline Chart */}
-              <Widget 
-                title="Average Pipeline Duration by Repository" 
-                subtitle="End-to-end runtime of workflows in minutes"
-                className="cicd-chart-widget"
-              >
-                {transformedData.pipelineDurationsChart && (
-                  <div className="horizontal-bar-chart">
-                    <canvas 
-                      ref={(canvas) => {
-                        if (canvas && transformedData.pipelineDurationsChart) {
-                          const ctx = canvas.getContext('2d');
-                          // Clear any existing chart
-                          if (canvas.chart) {
-                            canvas.chart.destroy();
-                          }
-                          // Create new chart
-                          canvas.chart = new ChartJS(ctx, {
-                            type: 'bar',
-                            data: transformedData.pipelineDurationsChart,
-                            options: {
-                              responsive: true,
-                              maintainAspectRatio: false,
-                              scales: {
-                                x: {
-                                  grid: {
-                                    display: false
-                                  },
-                                  title: {
-                                    display: true,
-                                    text: 'Repository'
-                                  }
-                                },
-                                y: {
-                                  beginAtZero: true,
-                                  title: {
-                                    display: true,
-                                    text: 'Duration (minutes)'
-                                  }
-                                }
-                              },
-                              plugins: {
-                                legend: {
-                                  display: false
-                                },
-                                tooltip: {
-                                  callbacks: {
-                                    label: function(context) {
-                                      return `${context.parsed.y}m`;
-                                    }
-                                  }
-                                }
-                              }
-                            }
-                          });
-                        }
-                      }}
-                      height="300"
-                    />
-                  </div>
-                )}
-              </Widget>
-            </div>
-
-            {/* Charts Row */}
+            {/* Charts Row - Moved to appear after metric cards */}
             <div className="cicd-charts-container">
               {/* Pipeline Efficiency */}
               <Widget 
-                title="Pipeline Efficiency: Time Spent per Stage and Repository" 
-                subtitle="Time spent in each build stage by repository"
+                title="Average Time per CI/CD Stage by Repository	" 
+                subtitle="Breakdown of avg. time spent in each stage (Build, Test, Deploy,automation)"
                 className="cicd-chart-widget"
               >
                 {transformedData.stackedBarChart && (
@@ -302,8 +173,8 @@ const CICDMetrics = ({ isoStartDate, isoEndDate, refreshKey }) => {
 
               {/* Stages Causing Most Failures */}
               <Widget 
-                title="Stages Causing Most Failures" 
-                subtitle="Distribution of failures across pipeline stages"
+                title="Stages Causing Most CI/CD Failures" 
+                subtitle="Identifies which CI/CD stages most frequently lead to pipeline failures"
                 className="cicd-chart-widget"
               >
                 {transformedData.pieChart && (
@@ -338,6 +209,135 @@ const CICDMetrics = ({ isoStartDate, isoEndDate, refreshKey }) => {
                                   callbacks: {
                                     label: function(context) {
                                       return `${context.label}: ${context.parsed}%`;
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          });
+                        }
+                      }}
+                      height="300"
+                    />
+                  </div>
+                )}
+              </Widget>
+            </div>
+
+            {/* Build and Pipeline Duration Charts Row - Moved below */}
+            <div className="cicd-charts-container">
+              {/* Average Build Duration by Repository Chart */}
+              <Widget 
+                title="Average Build Time by Repository	" 
+                subtitle="Avg. time spent in build stage per pipeline run"
+                className="cicd-chart-widget"
+              >
+                {transformedData.buildDurationsChart && (
+                  <div className="horizontal-bar-chart">
+                    <canvas 
+                      ref={(canvas) => {
+                        if (canvas && transformedData.buildDurationsChart) {
+                          const ctx = canvas.getContext('2d');
+                          // Clear any existing chart
+                          if (canvas.chart) {
+                            canvas.chart.destroy();
+                          }
+                          // Create new chart
+                          canvas.chart = new ChartJS(ctx, {
+                            type: 'bar',
+                            data: transformedData.buildDurationsChart,
+                            options: {
+                              responsive: true,
+                              maintainAspectRatio: false,
+                              scales: {
+                                x: {
+                                  grid: {
+                                    display: false
+                                  },
+                                  title: {
+                                    display: true,
+                                    text: 'Repository'
+                                  }
+                                },
+                                y: {
+                                  beginAtZero: true,
+                                  title: {
+                                    display: true,
+                                    text: 'Duration (minutes)'
+                                  }
+                                }
+                              },
+                              plugins: {
+                                legend: {
+                                  display: false
+                                },
+                                tooltip: {
+                                  callbacks: {
+                                    label: function(context) {
+                                      return `${context.parsed.y}m`;
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          });
+                        }
+                      }}
+                      height="300"
+                    />
+                  </div>
+                )}
+              </Widget>
+
+              {/* Longest Running Pipeline Chart */}
+              <Widget 
+                title="Average Total Pipeline Time by Repository" 
+                subtitle="Avg. end-to-end execution time for CI/CD pipelines"
+                className="cicd-chart-widget"
+              >
+                {transformedData.pipelineDurationsChart && (
+                  <div className="horizontal-bar-chart">
+                    <canvas 
+                      ref={(canvas) => {
+                        if (canvas && transformedData.pipelineDurationsChart) {
+                          const ctx = canvas.getContext('2d');
+                          // Clear any existing chart
+                          if (canvas.chart) {
+                            canvas.chart.destroy();
+                          }
+                          // Create new chart
+                          canvas.chart = new ChartJS(ctx, {
+                            type: 'bar',
+                            data: transformedData.pipelineDurationsChart,
+                            options: {
+                              responsive: true,
+                              maintainAspectRatio: false,
+                              scales: {
+                                x: {
+                                  grid: {
+                                    display: false
+                                  },
+                                  title: {
+                                    display: true,
+                                    text: 'Repository'
+                                  }
+                                },
+                                y: {
+                                  beginAtZero: true,
+                                  title: {
+                                    display: true,
+                                    text: 'Duration (minutes)'
+                                  }
+                                }
+                              },
+                              plugins: {
+                                legend: {
+                                  display: false
+                                },
+                                tooltip: {
+                                  callbacks: {
+                                    label: function(context) {
+                                      return `${context.parsed.y}m`;
                                     }
                                   }
                                 }

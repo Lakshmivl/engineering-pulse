@@ -80,7 +80,7 @@ const prepareRepoSummaryChartData = (repoSummary) => {
             },
             title: {
               display: true,
-              text: 'Count / Size',
+              text: 'PR Size',
             },
             ticks: {
               precision: 0,
@@ -187,7 +187,7 @@ const prepareRepoSummaryChartData = (repoSummary) => {
           },
           title: {
             display: true,
-            text: 'Count / Size',
+            text: 'PR Size',
           },
           ticks: {
             precision: 0,
@@ -334,7 +334,7 @@ const DashboardOverview = ({ startDate, endDate, isoStartDate, isoEndDate, refre
     const chartData = prepareRepoSummaryChartData(summaryData?.repo_summary);
     return (
       <div className="repo-summary-section">
-        <h2>Repository Summary</h2>
+        <h2>Top 5 Repositories with Longest Cycle Times</h2>
         <div className="repo-summary-chart">
           <MixedChart 
             data={chartData.data}

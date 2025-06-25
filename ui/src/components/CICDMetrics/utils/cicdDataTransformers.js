@@ -149,15 +149,15 @@ export const transformForMetricCards = (cicdData) => {
 
   return {
     slowestBuild: {
-      title: 'Slowest Building Repo',
+      title: 'Repo with Longest Build Stage Time',
       value: `${cicdData.slowest_build_repo?.repo?.toUpperCase() || 'N/A'} (${cicdData.slowest_build_repo?.avg_build_time_mins || 0}m)`,
-      subtitle: 'Average build duration',
+      subtitle: 'Average time spent in build stage per run',
       trend: 'neutral'
     },
     longestPipeline: {
-      title: 'Longest Running Pipeline',
+      title: 'Repo with Longest End-to-End Pipeline Time',
       value: `${cicdData.longest_pipeline_repo?.repo?.toUpperCase() || 'N/A'} (${cicdData.longest_pipeline_repo?.avg_total_pipeline_time_mins || 0}m)`,
-      subtitle: 'Average pipeline duration',
+      subtitle: 'Average total time from start to finish of all CI/CD stage',
       trend: 'neutral'
     },
     successRate: {
@@ -167,7 +167,7 @@ export const transformForMetricCards = (cicdData) => {
       trend: cicdData.pipeline_success_rate?.success_percentage >= 90 ? 'positive' : 'negative'
     },
     failureRate: {
-      title: 'Build Failure Rate',
+      title: 'Pipeline Failure Rate',
       value: `${cicdData.build_failure_rate?.failure_percentage || 0}%`,
       subtitle: `${cicdData.build_failure_rate?.failed_builds || 0}/${cicdData.build_failure_rate?.total_builds || 0} builds`,
       trend: cicdData.build_failure_rate?.failure_percentage <= 10 ? 'positive' : 'negative'
