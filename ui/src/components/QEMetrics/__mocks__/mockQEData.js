@@ -4,6 +4,28 @@
  */
 
 export const mockQEData = {
+  "qe_automation_coverage_percentage": 4.88,
+  "flaky_automation_percentage": 0,
+  "repo_run_summary": [
+    {
+      "repo": "it-web-aem-website",
+      "total_runs": 23,
+      "failure_count": 8,
+      "avg_duration_mins": 7.33
+    },
+    {
+      "repo": "it-web-services",
+      "total_runs": 2,
+      "failure_count": 0,
+      "avg_duration_mins": 2.82
+    },
+    {
+      "repo": "it-web-cart-checkout",
+      "total_runs": 6,
+      "failure_count": 1,
+      "avg_duration_mins": 22.65
+    }
+  ],
   "repos_with_automation_avg_duration": [
     {
       "repo": "it-web-sap-commerce",
@@ -105,6 +127,9 @@ export const mockQEData = {
 };
 
 export const mockEmptyQEData = {
+  "qe_automation_coverage_percentage": 0,
+  "flaky_automation_percentage": 0,
+  "repo_run_summary": [],
   "repos_with_automation_avg_duration": [],
   "repos_with_failures": [],
   "repo_with_longest_automation": null,
@@ -113,6 +138,9 @@ export const mockEmptyQEData = {
 };
 
 export const mockQEDataWithErrors = {
+  "qe_automation_coverage_percentage": null,
+  "flaky_automation_percentage": undefined,
+  "repo_run_summary": null,
   "repos_with_automation_avg_duration": null,
   "repos_with_failures": undefined,
   "repo_with_longest_automation": {},

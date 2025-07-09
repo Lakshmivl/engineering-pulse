@@ -23,53 +23,74 @@ export const transformForQEMetricCards = (qeData) => {
       value: `${qeData.repo_with_longest_automation?.repo?.toUpperCase() || 'N/A'} (${Math.round(qeData.repo_with_longest_automation?.avg_automation_duration_mins || 0)}m)`,
       subtitle: 'Average automation duration',
       trend: 'neutral'
+    },
+    automationCoverage: {
+      title: 'Automation Coverage',
+      value: `${qeData.qe_automation_coverage_percentage || 0}%`,
+      subtitle: '% of merged PRs that had automation',
+      trend: 'positive'
+    },
+    flakyRuns: {
+      title: 'Flaky Runs',
+      value: `${qeData.flaky_automation_percentage || 0}%`,
+      subtitle: 'PRs where automation failed first, passed on retry',
+      trend: 'negative'
     }
   };
 };
 
 /**
- * Transform QE data for automation duration bar chart
- * @param {Array} durationData - Automation duration by repo data
- * @returns {Object} Formatted data for horizontal bar chart
+ * Transform QE data for Sprint Test Automation Results combined chart
+ * @param {Array} repoRunSummary - Repository run summary data
+ * @returns {Object} Formatted data for combined chart (bars + line)
  */
-export const transformForAutomationDurationChart = (durationData) => {
-  if (!durationData || !Array.isArray(durationData)) return null;
+export const transformForSprintTestAutomationResults = (repoRunSummary) => {
+  if (!repoRunSummary || !Array.isArray(repoRunSummary) || repoRunSummary.length === 0) return null;
 
-  const labels = durationData.map(item => item.repo.toUpperCase());
-  const data = durationData.map(item => Math.round(item.avg_automation_duration_mins));
+  const labels = repoRunSummary.map(item => item.repo.toUpperCase());
+  const passedData = repoRunSummary.map(item => item.total_runs - item.failure_count);
+  const failedData = repoRunSummary.map(item => item.failure_count);
+  const durationData = repoRunSummary.map(item => Math.round(item.avg_duration_mins * 10) / 10);
 
   return {
     labels,
-    datasets: [{
-      label: 'Avg Duration (mins)',
-      data,
-      backgroundColor: '#3B82F6',
-      borderColor: '#2563EB',
-      borderWidth: 1
-    }]
-  };
-};
-
-/**
- * Transform QE data for failures bar chart
- * @param {Array} failuresData - Failures by repo data
- * @returns {Object} Formatted data for horizontal bar chart
- */
-export const transformForFailuresChart = (failuresData) => {
-  if (!failuresData || !Array.isArray(failuresData)) return null;
-
-  const labels = failuresData.map(item => item.repo.toUpperCase());
-  const data = failuresData.map(item => item.failure_percentage);
-
-  return {
-    labels,
-    datasets: [{
-      label: 'Failure Percentage (%)',
-      data,
-      backgroundColor: '#EF4444',
-      borderColor: '#DC2626',
-      borderWidth: 1
-    }]
+    datasets: [
+      {
+        label: 'Passed',
+        data: passedData,
+        backgroundColor: '#3B82F6',
+        borderColor: '#2563EB',
+        borderWidth: 1,
+        type: 'bar',
+        yAxisID: 'y'
+      },
+      {
+        label: 'Failed',
+        data: failedData,
+        backgroundColor: '#EF4444',
+        borderColor: '#DC2626',
+        borderWidth: 1,
+        type: 'bar',
+        yAxisID: 'y'
+      },
+      {
+        label: 'Avg Duration',
+        data: durationData,
+        borderColor: '#F59E0B',
+        backgroundColor: '#F59E0B',
+        borderWidth: 3,
+        type: 'line',
+        yAxisID: 'y1',
+        tension: 0.3,
+        pointRadius: 6,
+        pointHoverRadius: 8,
+        pointBorderWidth: 2,
+        pointBorderColor: '#FFFFFF',
+        pointBackgroundColor: '#F59E0B',
+        fill: false,
+        order: 0
+      }
+    ]
   };
 };
 
@@ -83,10 +104,45 @@ export const transformForFailuresChart = (failuresData) => {
 export const transformForHeatmap = (heatmapData, startDate, endDate) => {
   if (!heatmapData || !Array.isArray(heatmapData) || !startDate || !endDate) return null;
 
-  // Filter data by date range
+  // Helper function to extract date string from ISO datetime in UTC
+  const getUTCDateString = (isoString) => {
+    const date = new Date(isoString);
+    return date.getUTCFullYear() + '-' + 
+           String(date.getUTCMonth() + 1).padStart(2, '0') + '-' + 
+           String(date.getUTCDate()).padStart(2, '0');
+  };
+
+  // Helper function to get UTC date string from date input
+  const getDateString = (dateInput) => {
+    let date;
+    if (typeof dateInput === 'string' && dateInput.includes('T')) {
+      date = new Date(dateInput);
+    } else if (typeof dateInput === 'string' && dateInput.match(/^\d{4}-\d{2}-\d{2}$/)) {
+      date = new Date(dateInput + 'T00:00:00.000Z');
+    } else {
+      date = new Date(dateInput);
+    }
+    return getUTCDateString(date.toISOString());
+  };
+
+  const startDateString = getDateString(startDate);
+  const endDateString = getDateString(endDate);
+
+  // Filter data by date range using UTC date strings
   const filteredData = heatmapData.filter(item => {
-    const mergeDate = new Date(item.merged_date);
-    return mergeDate >= new Date(startDate) && mergeDate <= new Date(endDate);
+    const mergeDateString = getUTCDateString(item.merged_date);
+    return mergeDateString >= startDateString && mergeDateString <= endDateString;
+  });
+
+  console.log('Heatmap filtering:', {
+    startDateString,
+    endDateString,
+    totalItems: heatmapData.length,
+    filteredItems: filteredData.length,
+    sampleData: heatmapData.slice(0, 2).map(item => ({
+      original: item.merged_date,
+      extracted: getUTCDateString(item.merged_date)
+    }))
   });
 
   if (filteredData.length === 0) {
@@ -96,13 +152,16 @@ export const transformForHeatmap = (heatmapData, startDate, endDate) => {
     };
   }
 
-  // Create date range array
+  // Create date range array using UTC dates
   const dateRange = [];
-  const start = new Date(startDate);
-  const end = new Date(endDate);
+  const start = new Date(startDateString + 'T00:00:00.000Z');
+  const end = new Date(endDateString + 'T00:00:00.000Z');
   
-  for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
-    dateRange.push(new Date(d).toISOString().split('T')[0]);
+  for (let d = new Date(start); d <= end; d.setUTCDate(d.getUTCDate() + 1)) {
+    const dateStr = d.getUTCFullYear() + '-' + 
+                   String(d.getUTCMonth() + 1).padStart(2, '0') + '-' + 
+                   String(d.getUTCDate()).padStart(2, '0');
+    dateRange.push(dateStr);
   }
 
   // Get unique repositories from filtered data
@@ -114,7 +173,7 @@ export const transformForHeatmap = (heatmapData, startDate, endDate) => {
     dateRange.forEach((date, dateIndex) => {
       const dayData = filteredData.filter(item => 
         item.repo === repo && 
-        item.merged_date.split('T')[0] === date
+        getUTCDateString(item.merged_date) === date
       );
       
       matrixData.push({
@@ -196,7 +255,10 @@ export const validateQEData = (data) => {
     'repo_with_longest_automation',
     'repos_with_automation_avg_duration',
     'repos_with_failures',
-    'pr_delivery_heatmap'
+    'pr_delivery_heatmap',
+    'qe_automation_coverage_percentage',
+    'flaky_automation_percentage',
+    'repo_run_summary'
   ];
   
   return requiredFields.every(field => data.hasOwnProperty(field));
@@ -289,8 +351,7 @@ export const sortRepositories = (repos, sortBy = 'name', order = 'asc') => {
 
 const qeDataTransformers = {
   transformForQEMetricCards,
-  transformForAutomationDurationChart,
-  transformForFailuresChart,
+  transformForSprintTestAutomationResults,
   transformForHeatmap,
   formatTime,
   calculatePercentage,

@@ -1,6 +1,7 @@
 import React, { useMemo, useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, ArcElement, Title, Tooltip, Legend, LineElement, PointElement, BarController, LineController, DoughnutController } from 'chart.js';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 import './QEMetrics.css';
 
 // Import custom hooks
@@ -9,8 +10,7 @@ import useQEData from './hooks/useQEData';
 // Import data transformers
 import { 
   transformForQEMetricCards, 
-  transformForAutomationDurationChart,
-  transformForFailuresChart,
+  transformForSprintTestAutomationResults,
   transformForHeatmap,
   validateQEData 
 } from './utils/qeDataTransformers';
@@ -22,7 +22,7 @@ import Widget from '../Contributors/components/Widget';
 // Import Dashboard MetricCard for consistency
 import MetricCard from '../Dashboard/MetricCard';
 
-// Register required Chart.js components
+// Register required Chart.js components (excluding ChartDataLabels to avoid global application)
 ChartJS.register(CategoryScale, LinearScale, BarElement, ArcElement, LineElement, PointElement, Title, Tooltip, Legend, BarController, LineController, DoughnutController);
 
 /**
@@ -30,9 +30,10 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, ArcElement, LineElement
  * @param {Object} props - Component props
  * @param {string} props.isoStartDate - ISO formatted start date
  * @param {string} props.isoEndDate - ISO formatted end date
+ * @param {string} props.selectedRepository - Selected repository filter
  * @param {number} props.refreshKey - Numeric key that changes to trigger a data refresh in the component
  */
-const QEMetrics = ({ isoStartDate, isoEndDate, refreshKey }) => {
+const QEMetrics = ({ isoStartDate, isoEndDate, selectedRepository, refreshKey }) => {
   // State for custom tooltip
   const [tooltip, setTooltip] = useState({
     visible: false,
@@ -50,6 +51,7 @@ const QEMetrics = ({ isoStartDate, isoEndDate, refreshKey }) => {
   const { qeData, loading, error, refreshData } = useQEData(
     isoStartDate, 
     isoEndDate, 
+    selectedRepository,
     refreshKey
   );
 
@@ -59,8 +61,7 @@ const QEMetrics = ({ isoStartDate, isoEndDate, refreshKey }) => {
 
     return {
       metricCards: transformForQEMetricCards(qeData),
-      durationChart: transformForAutomationDurationChart(qeData.repos_with_automation_avg_duration),
-      failuresChart: transformForFailuresChart(qeData.repos_with_failures),
+      sprintTestAutomationResults: transformForSprintTestAutomationResults(qeData.repo_run_summary),
       heatmap: transformForHeatmap(qeData.pr_delivery_heatmap, isoStartDate, isoEndDate)
     };
   }, [qeData, isoStartDate, isoEndDate]);
@@ -164,6 +165,22 @@ const QEMetrics = ({ isoStartDate, isoEndDate, refreshKey }) => {
                 icon="⏱️"
                 className="metric-card-small-value"
               />
+              <MetricCard
+                title={transformedData.metricCards.automationCoverage.title}
+                value={transformedData.metricCards.automationCoverage.value}
+                subtitle={transformedData.metricCards.automationCoverage.subtitle}
+                trend={transformedData.metricCards.automationCoverage.trend}
+                icon="🔧"
+                className="metric-card-large"
+              />
+              <MetricCard
+                title={transformedData.metricCards.flakyRuns.title}
+                value={transformedData.metricCards.flakyRuns.value}
+                subtitle={transformedData.metricCards.flakyRuns.subtitle}
+                trend={transformedData.metricCards.flakyRuns.trend}
+                icon="🔄"
+                className="metric-card-large"
+              />
             </div>
 
             {/* Heatmap Row */}
@@ -191,7 +208,7 @@ const QEMetrics = ({ isoStartDate, isoEndDate, refreshKey }) => {
                         <div className="heatmap-x-labels">
                           {transformedData.heatmap.labels.x.map((date, index) => (
                             <div key={index} className="heatmap-x-label">
-                              {new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                              {new Date(date + 'T00:00:00.000Z').toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' })}
                             </div>
                           ))}
                         </div>
@@ -239,33 +256,38 @@ const QEMetrics = ({ isoStartDate, isoEndDate, refreshKey }) => {
               </Widget>
             </div>
 
-            {/* Bar Charts Row */}
+            {/* Sprint Test Automation Results Chart */}
             <div className="qe-charts-container">
-              {/* Test Automation Duration Chart */}
               <Widget 
-                title="Average Test Automation Time by Repository" 
-                subtitle="Avg. time to execute automated test suites"
-                className="qe-chart-widget"
+                title="Sprint Test Automation Results" 
+                subtitle="Test runs, failures, and average duration by repository"
+                className="qe-chart-widget full-width"
               >
-                {transformedData.durationChart && (
+                {transformedData.sprintTestAutomationResults && (
                   <div className="horizontal-bar-chart">
                     <canvas 
                       ref={(canvas) => {
-                        if (canvas && transformedData.durationChart) {
+                        if (canvas && transformedData.sprintTestAutomationResults) {
                           const ctx = canvas.getContext('2d');
                           // Clear any existing chart
                           if (canvas.chart) {
                             canvas.chart.destroy();
                           }
-                          // Create new chart
+                          // Create new chart with local plugin registration
                           canvas.chart = new ChartJS(ctx, {
                             type: 'bar',
-                            data: transformedData.durationChart,
+                            data: transformedData.sprintTestAutomationResults,
+                            plugins: [ChartDataLabels],
                             options: {
                               responsive: true,
                               maintainAspectRatio: false,
+                              interaction: {
+                                mode: 'index',
+                                intersect: false,
+                              },
                               scales: {
                                 x: {
+                                  stacked: true,
                                   grid: {
                                     display: false
                                   },
@@ -275,98 +297,81 @@ const QEMetrics = ({ isoStartDate, isoEndDate, refreshKey }) => {
                                   }
                                 },
                                 y: {
+                                  type: 'linear',
+                                  display: true,
+                                  position: 'left',
+                                  stacked: true,
                                   beginAtZero: true,
                                   title: {
                                     display: true,
-                                    text: 'Duration (minutes)'
+                                    text: 'Number of Runs'
                                   }
-                                }
-                              },
-                              plugins: {
-                                legend: {
-                                  display: false
                                 },
-                                tooltip: {
-                                  callbacks: {
-                                    label: function(context) {
-                                      return `${context.parsed.y}m`;
-                                    }
-                                  }
-                                }
-                              }
-                            }
-                          });
-                        }
-                      }}
-                      height="300"
-                    />
-                  </div>
-                )}
-              </Widget>
-
-              {/* Test Failures Chart */}
-              <Widget 
-                title="Test Automation Failure Rate by Repository" 
-                subtitle="% of automated test runs that failed"
-                className="qe-chart-widget"
-              >
-                {transformedData.failuresChart && (
-                  <div className="horizontal-bar-chart">
-                    <canvas 
-                      ref={(canvas) => {
-                        if (canvas && transformedData.failuresChart) {
-                          const ctx = canvas.getContext('2d');
-                          // Clear any existing chart
-                          if (canvas.chart) {
-                            canvas.chart.destroy();
-                          }
-                          // Create new chart
-                          canvas.chart = new ChartJS(ctx, {
-                            type: 'bar',
-                            data: transformedData.failuresChart,
-                            options: {
-                              responsive: true,
-                              maintainAspectRatio: false,
-                              scales: {
-                                x: {
-                                  grid: {
-                                    display: false
+                                y1: {
+                                  type: 'linear',
+                                  display: true,
+                                  position: 'right',
+                                  beginAtZero: true,
+                                  title: {
+                                    display: true,
+                                    text: 'Avg Duration (min)'
                                   },
-                                  title: {
-                                    display: true,
-                                    text: 'Repository'
-                                  }
-                                },
-                                y: {
-                                  beginAtZero: true,
-                                  title: {
-                                    display: true,
-                                    text: 'Failure Percentage (%)'
-                                  }
+                                  grid: {
+                                    drawOnChartArea: false,
+                                  },
                                 }
                               },
                               plugins: {
                                 legend: {
-                                  display: false
+                                  display: true,
+                                  position: 'top'
                                 },
                                 tooltip: {
                                   callbacks: {
                                     label: function(context) {
                                       const dataIndex = context.dataIndex;
-                                      const failureData = qeData.repos_with_failures[dataIndex];
-                                      return [
-                                        `Failure Rate: ${context.parsed.y}%`,
-                                        `Total Failures: ${failureData.failure_count}`
-                                      ];
+                                      const repoData = qeData.repo_run_summary[dataIndex];
+                                      
+                                      if (context.dataset.label === 'Avg Duration') {
+                                        return `Avg Duration: ${context.parsed.y}m`;
+                                      } else {
+                                        const total = repoData.total_runs;
+                                        const passed = total - repoData.failure_count;
+                                        const failed = repoData.failure_count;
+                                        
+                                        return [
+                                          `${context.dataset.label}: ${context.parsed.y}`,
+                                          `Total Runs: ${total}`,
+                                          `Passed: ${passed}`,
+                                          `Failed: ${failed}`,
+                                          `Avg Duration: ${repoData.avg_duration_mins}m`
+                                        ];
+                                      }
                                     }
                                   }
+                                },
+                                datalabels: {
+                                  display: function(context) {
+                                    return context.dataset.label === 'Avg Duration';
+                                  },
+                                  align: 'top',
+                                  anchor: 'end',
+                                  color: '#F59E0B',
+                                  font: {
+                                    weight: 'bold',
+                                    size: 12
+                                  },
+                                  formatter: function(value) {
+                                    return value + 'm';
+                                  },
+                                  offset: 4
                                 }
                               }
                             }
                           });
                         }
                       }}
-                      height="300"
+                      height="400"
                     />
                   </div>
                 )}
@@ -417,6 +422,8 @@ QEMetrics.propTypes = {
   isoStartDate: PropTypes.string.isRequired,
   /** ISO formatted end date for the date range */
   isoEndDate: PropTypes.string.isRequired,
+  /** Selected repository filter */
+  selectedRepository: PropTypes.string.isRequired,
   /** Numeric key that changes to trigger a data refresh */
   refreshKey: PropTypes.number.isRequired
 };

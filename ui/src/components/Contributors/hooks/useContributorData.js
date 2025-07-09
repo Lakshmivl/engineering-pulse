@@ -6,10 +6,11 @@ import { fetchContributors, createCancellationToken } from '../../../services/ap
  * 
  * @param {string} isoStartDate - ISO formatted start date
  * @param {string} isoEndDate - ISO formatted end date
+ * @param {string} selectedRepository - Selected repository filter
  * @param {number} refreshKey - Numeric key that changes to trigger a data refresh
  * @returns {Object} Data and state for contributor insights
  */
-const useContributorData = (isoStartDate, isoEndDate, refreshKey) => {
+const useContributorData = (isoStartDate, isoEndDate, selectedRepository, refreshKey) => {
   const [contributorData, setContributorData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -25,7 +26,7 @@ const useContributorData = (isoStartDate, isoEndDate, refreshKey) => {
       const cancellation = createCancellationToken();
       cancelToken = cancellation.token;
       
-      const data = await fetchContributors(isoStartDate, isoEndDate, {
+      const data = await fetchContributors(isoStartDate, isoEndDate, selectedRepository, {
         cancelToken
       });
       
@@ -40,7 +41,7 @@ const useContributorData = (isoStartDate, isoEndDate, refreshKey) => {
     } finally {
       setLoading(false);
     }
-  }, [isoStartDate, isoEndDate]);
+  }, [isoStartDate, isoEndDate, selectedRepository]);
 
   useEffect(() => {
     // Immediately invoke async function

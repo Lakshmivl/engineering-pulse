@@ -36,6 +36,34 @@
   gap: 12px; /* Adjust gap as needed */
 }
 
+.repository-filter {
+  padding: 8px 32px 8px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background-color: #fff;
+  font-size: 14px;
+  color: #374151;
+  cursor: pointer;
+  min-width: 180px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23374151' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 16px;
+}
+
+.repository-filter:hover {
+  border-color: #9ca3af;
+}
+
+.repository-filter:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
 .date-picker-container {
   display: flex;
   align-items: center;
@@ -70,12 +98,16 @@
     padding: 16px;
   }
   
-  .logo-container, .date-picker-container {
+  .logo-container, .header-actions {
     width: 100%;
   }
   
-  .date-picker-container {
+  .header-actions {
     justify-content: flex-end;
+  }
+  
+  .repository-filter {
+    min-width: 160px;
   }
 }
 
@@ -84,7 +116,14 @@
     font-size: 18px;
   }
   
-  .date-picker-container {
+  .header-actions {
     justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  
+  .repository-filter {
+    min-width: 140px;
+    font-size: 13px;
   }
 }

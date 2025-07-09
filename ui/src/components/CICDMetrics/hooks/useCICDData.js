@@ -6,10 +6,11 @@ import { fetchCICDMetrics, createCancellationToken } from '../../../services/api
  * 
  * @param {string} isoStartDate - ISO formatted start date
  * @param {string} isoEndDate - ISO formatted end date
+ * @param {string} selectedRepository - Selected repository filter
  * @param {number} refreshKey - Numeric key that changes to trigger a data refresh
  * @returns {Object} Data and state for CICD metrics
  */
-const useCICDData = (isoStartDate, isoEndDate, refreshKey) => {
+const useCICDData = (isoStartDate, isoEndDate, selectedRepository, refreshKey) => {
   const [cicdData, setCicdData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -25,7 +26,7 @@ const useCICDData = (isoStartDate, isoEndDate, refreshKey) => {
       const cancellation = createCancellationToken();
       cancelToken = cancellation.token;
       
-      const data = await fetchCICDMetrics(isoStartDate, isoEndDate, {
+      const data = await fetchCICDMetrics(isoStartDate, isoEndDate, selectedRepository, {
         cancelToken
       });
       
@@ -40,7 +41,7 @@ const useCICDData = (isoStartDate, isoEndDate, refreshKey) => {
     } finally {
       setLoading(false);
     }
-  }, [isoStartDate, isoEndDate]);
+  }, [isoStartDate, isoEndDate, selectedRepository]);
 
   useEffect(() => {
     // Immediately invoke async function

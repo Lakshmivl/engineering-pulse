@@ -15,9 +15,10 @@ import './PullRequests.css';
  * @param {Object} props - Component props
  * @param {string} props.isoStartDate - ISO formatted start date
  * @param {string} props.isoEndDate - ISO formatted end date
+ * @param {string} props.selectedRepository - Selected repository filter
  * @param {number} props.refreshKey - Numeric key that changes to trigger a data refresh
  */
-const PullRequestTable = ({ isoStartDate, isoEndDate, refreshKey }) => {
+const PullRequestTable = ({ isoStartDate, isoEndDate, selectedRepository, refreshKey }) => {
   const [tableData, setTableData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -61,7 +62,7 @@ const PullRequestTable = ({ isoStartDate, isoEndDate, refreshKey }) => {
       const cancellation = createCancellationToken();
       cancelToken = cancellation.token;
       
-      const data = await fetchPRTable(isoStartDate, isoEndDate, {
+      const data = await fetchPRTable(isoStartDate, isoEndDate, selectedRepository, {
         cancelToken
       });
       
@@ -95,7 +96,7 @@ const PullRequestTable = ({ isoStartDate, isoEndDate, refreshKey }) => {
         setLoading(false);
       }
     }
-  }, [isoStartDate, isoEndDate]);
+  }, [isoStartDate, isoEndDate, selectedRepository]);
 
   useEffect(() => {
     // Immediately invoke async function

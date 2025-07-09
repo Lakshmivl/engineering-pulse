@@ -74,11 +74,12 @@ export const createCancellationToken = () => {
  * Fetches PR metrics table data
  * @param {string} startDate - Start date in ISO format
  * @param {string} endDate - End date in ISO format
+ * @param {string} repository - Repository filter (optional)
  * @param {object} options - Additional options
  * @param {object} [options.cancelToken] - Cancellation token for the request
  * @returns {Promise} - Promise resolving to PR table data
  */
-export const fetchPRTable = async (startDate, endDate, options = {}) => {
+export const fetchPRTable = async (startDate, endDate, repository = '', options = {}) => {
   try {
     // Return mock data if mock responses are enabled
     if (CURRENT_ENV.mockResponses) {
@@ -90,12 +91,19 @@ export const fetchPRTable = async (startDate, endDate, options = {}) => {
     const compactStartDate = formatDateToCompact(startDate);
     const compactEndDate = formatDateToCompact(endDate);
     
+    const params = {
+      startDate: compactStartDate,
+      endDate: compactEndDate,
+      reqType: REQUEST_TYPES.PR_DETAILS
+    };
+    
+    // Only add repo parameter if repository is selected
+    if (repository) {
+      params.repo = repository;
+    }
+    
     const response = await apiClient.get(ENDPOINTS.PR_TABLE, {
-      params: {
-        startDate: compactStartDate,
-        endDate: compactEndDate,
-        reqType: REQUEST_TYPES.PR_DETAILS
-      },
+      params,
       cancelToken: options.cancelToken
     });
     
@@ -116,11 +124,12 @@ export const fetchPRTable = async (startDate, endDate, options = {}) => {
  * Fetches contributor insights data
  * @param {string} startDate - Start date in ISO format
  * @param {string} endDate - End date in ISO format
+ * @param {string} repository - Repository filter (optional)
  * @param {object} options - Additional options
  * @param {object} [options.cancelToken] - Cancellation token for the request
  * @returns {Promise} - Promise resolving to contributor data
  */
-export const fetchContributors = async (startDate, endDate, options = {}) => {
+export const fetchContributors = async (startDate, endDate, repository = '', options = {}) => {
   try {
     // Return mock data if mock responses are enabled
     if (CURRENT_ENV.mockResponses) {
@@ -132,12 +141,19 @@ export const fetchContributors = async (startDate, endDate, options = {}) => {
     const compactStartDate = formatDateToCompact(startDate);
     const compactEndDate = formatDateToCompact(endDate);
     
+    const params = {
+      startDate: compactStartDate,
+      endDate: compactEndDate,
+      reqType: REQUEST_TYPES.CONTRIBUTORS
+    };
+    
+    // Only add repo parameter if repository is selected
+    if (repository) {
+      params.repo = repository;
+    }
+    
     const response = await apiClient.get(ENDPOINTS.CONTRIBUTORS, {
-      params: {
-        startDate: compactStartDate,
-        endDate: compactEndDate,
-        reqType: REQUEST_TYPES.CONTRIBUTORS
-      },
+      params,
       cancelToken: options.cancelToken
     });
     
@@ -158,11 +174,12 @@ export const fetchContributors = async (startDate, endDate, options = {}) => {
  * Fetches summary metrics data
  * @param {string} startDate - Start date in ISO format
  * @param {string} endDate - End date in ISO format
+ * @param {string} repository - Repository filter (optional)
  * @param {object} options - Additional options
  * @param {object} [options.cancelToken] - Cancellation token for the request
  * @returns {Promise} - Promise resolving to summary data
  */
-export const fetchSummary = async (startDate, endDate, options = {}) => {
+export const fetchSummary = async (startDate, endDate, repository = '', options = {}) => {
   try {
     // Return mock data if mock responses are enabled
     if (CURRENT_ENV.mockResponses) {
@@ -174,12 +191,19 @@ export const fetchSummary = async (startDate, endDate, options = {}) => {
     const compactStartDate = formatDateToCompact(startDate);
     const compactEndDate = formatDateToCompact(endDate);
     
+    const params = {
+      startDate: compactStartDate,
+      endDate: compactEndDate,
+      reqType: REQUEST_TYPES.SUMMARY
+    };
+    
+    // Only add repo parameter if repository is selected
+    if (repository) {
+      params.repo = repository;
+    }
+    
     const response = await apiClient.get(ENDPOINTS.SUMMARY, {
-      params: {
-        startDate: compactStartDate,
-        endDate: compactEndDate,
-        reqType: REQUEST_TYPES.SUMMARY
-      },
+      params,
       cancelToken: options.cancelToken
     });
     
@@ -200,11 +224,12 @@ export const fetchSummary = async (startDate, endDate, options = {}) => {
  * Fetches CI/CD metrics data
  * @param {string} startDate - Start date in ISO format
  * @param {string} endDate - End date in ISO format
+ * @param {string} repository - Repository filter (optional)
  * @param {object} options - Additional options
  * @param {object} [options.cancelToken] - Cancellation token for the request
  * @returns {Promise} - Promise resolving to CICD metrics data
  */
-export const fetchCICDMetrics = async (startDate, endDate, options = {}) => {
+export const fetchCICDMetrics = async (startDate, endDate, repository = '', options = {}) => {
   try {
     // Return mock data if mock responses are enabled
     if (CURRENT_ENV.mockResponses) {
@@ -216,12 +241,19 @@ export const fetchCICDMetrics = async (startDate, endDate, options = {}) => {
     const compactStartDate = formatDateToCompact(startDate);
     const compactEndDate = formatDateToCompact(endDate);
     
+    const params = {
+      startDate: compactStartDate,
+      endDate: compactEndDate,
+      reqType: REQUEST_TYPES.CICD_METRICS
+    };
+    
+    // Only add repo parameter if repository is selected
+    if (repository) {
+      params.repo = repository;
+    }
+    
     const response = await apiClient.get(ENDPOINTS.CICD, {
-      params: {
-        startDate: compactStartDate,
-        endDate: compactEndDate,
-        reqType: REQUEST_TYPES.CICD_METRICS
-      },
+      params,
       cancelToken: options.cancelToken
     });
     

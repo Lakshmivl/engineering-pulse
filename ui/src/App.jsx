@@ -25,6 +25,9 @@ function App() {
   const [isoStartDate, setIsoStartDate] = useState(formatDateToISO(defaultDateRange.startDate));
   const [isoEndDate, setIsoEndDate] = useState(formatDateToISO(defaultDateRange.endDate));
   
+  // State for repository filter
+  const [selectedRepository, setSelectedRepository] = useState('');
+  
   // Refresh key to trigger data reload in children
   const [refreshKey, setRefreshKey] = useState(0);
 
@@ -45,6 +48,14 @@ function App() {
   };
 
   /**
+   * Handle repository change from the repository filter
+   * @param {string} repository - Selected repository
+   */
+  const handleRepositoryChange = (repository) => {
+    setSelectedRepository(repository);
+  };
+
+  /**
    * Handle manual refresh by updating the refreshKey
    */
   const handleRefresh = () => {
@@ -57,6 +68,8 @@ function App() {
         startDate={startDate}
         endDate={endDate}
         onDateChange={handleDateChange}
+        selectedRepository={selectedRepository}
+        onRepositoryChange={handleRepositoryChange}
         onRefresh={handleRefresh}
       />
       <Navigation />
@@ -71,6 +84,7 @@ function App() {
                 endDate={endDate}
                 isoStartDate={isoStartDate}
                 isoEndDate={isoEndDate}
+                selectedRepository={selectedRepository}
                 refreshKey={refreshKey}
               />
             } 
@@ -81,6 +95,7 @@ function App() {
               <ContributorInsights 
                 isoStartDate={isoStartDate}
                 isoEndDate={isoEndDate}
+                selectedRepository={selectedRepository}
                 refreshKey={refreshKey}
               />
             } 
@@ -91,6 +106,7 @@ function App() {
               <PullRequestTable 
                 isoStartDate={isoStartDate}
                 isoEndDate={isoEndDate}
+                selectedRepository={selectedRepository}
                 refreshKey={refreshKey}
               />
             } 
@@ -101,6 +117,7 @@ function App() {
               <CICDMetrics 
                 isoStartDate={isoStartDate}
                 isoEndDate={isoEndDate}
+                selectedRepository={selectedRepository}
                 refreshKey={refreshKey}
               />
             } 
@@ -111,6 +128,7 @@ function App() {
               <QEMetrics 
                 isoStartDate={isoStartDate}
                 isoEndDate={isoEndDate}
+                selectedRepository={selectedRepository}
                 refreshKey={refreshKey}
               />
             } 

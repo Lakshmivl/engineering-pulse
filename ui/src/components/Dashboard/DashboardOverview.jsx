@@ -236,9 +236,10 @@ const prepareRepoSummaryChartData = (repoSummary) => {
  * @param {Date} props.endDate - End date for filtering
  * @param {string} props.isoStartDate - ISO formatted start date
  * @param {string} props.isoEndDate - ISO formatted end date
+ * @param {string} props.selectedRepository - Selected repository filter
  * @param {number} props.refreshKey - Numeric key that changes to trigger a data refresh in the component
  */
-const DashboardOverview = ({ startDate, endDate, isoStartDate, isoEndDate, refreshKey }) => {
+const DashboardOverview = ({ startDate, endDate, isoStartDate, isoEndDate, selectedRepository, refreshKey }) => {
   const [summaryData, setSummaryData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -253,7 +254,7 @@ const DashboardOverview = ({ startDate, endDate, isoStartDate, isoEndDate, refre
       const cancellation = createCancellationToken();
       cancelToken = cancellation.token;
       
-      const data = await fetchSummary(isoStartDate, isoEndDate, { 
+      const data = await fetchSummary(isoStartDate, isoEndDate, selectedRepository, { 
         cancelToken 
       });
       
@@ -268,7 +269,7 @@ const DashboardOverview = ({ startDate, endDate, isoStartDate, isoEndDate, refre
     } finally {
       setLoading(false);
     }
-  }, [isoStartDate, isoEndDate]);
+  }, [isoStartDate, isoEndDate, selectedRepository]);
 
   useEffect(() => {
     // Immediately invoke async function

@@ -23,25 +23,34 @@ const TableHeader = ({
           S.No {getSortDirectionIcon('rowNumber')}
         </th>
         <th onClick={() => onSort('Jira_ID')} className={sortConfig.key === 'Jira_ID' ? 'sorted-column' : ''}>
-          Jira Ticket {getSortDirectionIcon('Jira_ID')}
+          Jira # {getSortDirectionIcon('Jira_ID')}
         </th>
         <th onClick={() => onSort('repository')} className={sortConfig.key === 'repository' ? 'sorted-column' : ''}>
           Repository {getSortDirectionIcon('repository')}
         </th>
         <th onClick={() => onSort('PRNumber')} className={sortConfig.key === 'PRNumber' ? 'sorted-column' : ''}>
-          Pull Request {getSortDirectionIcon('PRNumber')}
+          PR # {getSortDirectionIcon('PRNumber')}
+        </th>
+        <th onClick={() => onSort('Author')} className={sortConfig.key === 'Author' ? 'sorted-column' : ''}>
+          Author {getSortDirectionIcon('Author')}
         </th>
         <th onClick={() => onSort('State')} className={sortConfig.key === 'State' ? 'sorted-column' : ''}>
           PR Status {getSortDirectionIcon('State')}
         </th>
         <th onClick={() => onSort('CreatedDate')} className={sortConfig.key === 'CreatedDate' ? 'sorted-column' : ''}>
-          Review Requested Date {getSortDirectionIcon('CreatedDate')}
+          Review Req Date {getSortDirectionIcon('CreatedDate')}
         </th>
         <th onClick={() => onSort('MergedDate')} className={sortConfig.key === 'MergedDate' ? 'sorted-column' : ''}>
-          Merged Date {getSortDirectionIcon('MergedDate')}
+          Merge Date {getSortDirectionIcon('MergedDate')}
         </th>
-        <th onClick={() => onSort('Author')} className={sortConfig.key === 'Author' ? 'sorted-column' : ''}>
-          Author {getSortDirectionIcon('Author')}
+        <th onClick={() => onSort('deploy_status')} className={sortConfig.key === 'deploy_status' ? 'sorted-column' : ''}>
+          Stage Deploy {getSortDirectionIcon('deploy_status')}
+        </th>
+        <th onClick={() => onSort('PR_Iterations')} className={sortConfig.key === 'PR_Iterations' ? 'sorted-column' : ''}>
+          Iterations # {getSortDirectionIcon('PR_Iterations')}
+        </th>
+        <th onClick={() => onSort('CycleTimeDisplay')} className={sortConfig.key === 'CycleTimeDisplay' ? 'sorted-column' : ''}>
+          Cycle Time {getSortDirectionIcon('CycleTimeDisplay')}
         </th>
       </tr>
     </thead>

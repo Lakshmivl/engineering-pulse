@@ -31,13 +31,15 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, ArcElement, LineElement
  * @param {Object} props - Component props
  * @param {string} props.isoStartDate - ISO formatted start date
  * @param {string} props.isoEndDate - ISO formatted end date
+ * @param {string} props.selectedRepository - Selected repository filter
  * @param {number} props.refreshKey - Numeric key that changes to trigger a data refresh in the component
  */
-const CICDMetrics = ({ isoStartDate, isoEndDate, refreshKey }) => {
+const CICDMetrics = ({ isoStartDate, isoEndDate, selectedRepository, refreshKey }) => {
   // Use custom hook for data fetching and state management
   const { cicdData, loading, error, refreshData } = useCICDData(
     isoStartDate, 
     isoEndDate, 
+    selectedRepository,
     refreshKey
   );
 
@@ -364,6 +366,8 @@ CICDMetrics.propTypes = {
   isoStartDate: PropTypes.string.isRequired,
   /** ISO formatted end date for the date range */
   isoEndDate: PropTypes.string.isRequired,
+  /** Selected repository filter */
+  selectedRepository: PropTypes.string.isRequired,
   /** Numeric key that changes to trigger a data refresh */
   refreshKey: PropTypes.number.isRequired
 };

@@ -227,11 +227,152 @@ const MOCK_CICD = {
   ]
 };
 
+// Mock QE data matching the API contract
+const MOCK_QE = {
+  repo_with_highest_automation_failures: {
+    repo: "it-web-aem-website",
+    failure_count: 8,
+    failure_percentage: 34.78
+  },
+  repo_with_longest_automation: {
+    repo: "it-web-cart-checkout",
+    avg_automation_duration_mins: 22.65
+  },
+  repos_with_automation_avg_duration: [
+    {
+      repo: "it-web-aem-website",
+      avg_automation_duration_mins: 7.33
+    },
+    {
+      repo: "it-web-services",
+      avg_automation_duration_mins: 2.82
+    },
+    {
+      repo: "it-web-cart-checkout",
+      avg_automation_duration_mins: 22.65
+    }
+  ],
+  repos_with_failures: [
+    {
+      repo: "it-web-aem-website",
+      failure_count: 8,
+      failure_percentage: 34.78
+    },
+    {
+      repo: "it-web-services",
+      failure_count: 0,
+      failure_percentage: 0
+    },
+    {
+      repo: "it-web-cart-checkout",
+      failure_count: 1,
+      failure_percentage: 16.67
+    }
+  ],
+  qe_automation_coverage_percentage: 4.88,
+  flaky_automation_percentage: 0,
+  repo_run_summary: [
+    {
+      repo: "it-web-aem-website",
+      total_runs: 23,
+      failure_count: 8,
+      avg_duration_mins: 7.33
+    },
+    {
+      repo: "it-web-services",
+      total_runs: 2,
+      failure_count: 0,
+      avg_duration_mins: 2.82
+    },
+    {
+      repo: "it-web-cart-checkout",
+      total_runs: 6,
+      failure_count: 1,
+      avg_duration_mins: 22.65
+    }
+  ],
+  pr_delivery_heatmap: [
+    {
+      repo: "it-web-aem-website",
+      merged_date: "2025-06-18T09:42:55Z",
+      jira_id: "ENG-123",
+      jira_url: "https://example.atlassian.net/browse/ENG-123"
+    },
+    {
+      repo: "it-web-services",
+      merged_date: "2025-06-18T18:11:23Z",
+      jira_id: "ENG-124",
+      jira_url: "https://example.atlassian.net/browse/ENG-124"
+    },
+    {
+      repo: "it-web-cart-checkout",
+      merged_date: "2025-06-19T14:30:15Z",
+      jira_id: "ENG-125",
+      jira_url: "https://example.atlassian.net/browse/ENG-125"
+    },
+    {
+      repo: "it-web-aem-website",
+      merged_date: "2025-06-20T10:15:30Z",
+      jira_id: "ENG-126",
+      jira_url: "https://example.atlassian.net/browse/ENG-126"
+    },
+    {
+      repo: "it-web-services",
+      merged_date: "2025-06-21T16:45:12Z",
+      jira_id: "ENG-127",
+      jira_url: "https://example.atlassian.net/browse/ENG-127"
+    },
+    {
+      repo: "it-web-cart-checkout",
+      merged_date: "2025-06-22T11:20:45Z",
+      jira_id: "ENG-128",
+      jira_url: "https://example.atlassian.net/browse/ENG-128"
+    },
+    {
+      repo: "it-web-aem-website",
+      merged_date: "2025-06-23T13:55:20Z",
+      jira_id: "ENG-129",
+      jira_url: "https://example.atlassian.net/browse/ENG-129"
+    },
+    {
+      repo: "it-web-services",
+      merged_date: "2025-06-24T08:30:10Z",
+      jira_id: "ENG-130",
+      jira_url: "https://example.atlassian.net/browse/ENG-130"
+    },
+    {
+      repo: "it-web-cart-checkout",
+      merged_date: "2025-06-25T15:10:35Z",
+      jira_id: "ENG-131",
+      jira_url: "https://example.atlassian.net/browse/ENG-131"
+    },
+    {
+      repo: "it-web-aem-website",
+      merged_date: "2025-06-26T12:25:50Z",
+      jira_id: "ENG-132",
+      jira_url: "https://example.atlassian.net/browse/ENG-132"
+    },
+    {
+      repo: "it-web-services",
+      merged_date: "2025-06-27T09:40:25Z",
+      jira_id: "ENG-133",
+      jira_url: "https://example.atlassian.net/browse/ENG-133"
+    },
+    {
+      repo: "it-web-cart-checkout",
+      merged_date: "2025-06-28T17:15:40Z",
+      jira_id: "ENG-134",
+      jira_url: "https://example.atlassian.net/browse/ENG-134"
+    }
+  ]
+};
+
 export const mockConfig = {
   MOCK_SUMMARY,
   MOCK_PR_TABLE,
   MOCK_CONTRIBUTORS,
   MOCK_CICD,
+  MOCK_QE,
   
   // Function to simulate API delay
   getWithDelay: (mockData, delayMs = 100) => {

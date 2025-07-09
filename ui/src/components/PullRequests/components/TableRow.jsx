@@ -39,6 +39,7 @@ const TableRow = ({ pr, index }) => {
           </a>
         ) : ('-')}
       </td>
+      <td>{pr.Author || '-'}</td>
       <td>
         <span className={`pr-status pr-status-${pr.State?.toLowerCase().replace(/\s+/g, '-')}`}>
           {pr.State}
@@ -46,7 +47,33 @@ const TableRow = ({ pr, index }) => {
       </td>
       <td>{formatAPITimestampForDisplay(pr.ReviewRequestedTime)}</td>
       <td>{formatAPITimestampForDisplay(pr.MergedDate)}</td>
-      <td>{pr.Author || '-'}</td>
+      <td>
+        {pr.deploy_status === 'success' && pr.workflow_url ? (
+          <a 
+            href={pr.workflow_url} 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="deploy-status-link success"
+            aria-label="View successful deployment workflow"
+          >
+            ✓
+          </a>
+        ) : pr.deploy_status === 'failure' && pr.workflow_url ? (
+          <a 
+            href={pr.workflow_url} 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="deploy-status-link failure"
+            aria-label="View failed deployment workflow"
+          >
+            ✗
+          </a>
+        ) : (
+          <span className="deploy-status-none">-</span>
+        )}
+      </td>
+      <td>{pr.PR_Iterations || 0}</td>
+      <td>{pr.CycleTimeDisplay || '-'}</td>
     </tr>
   );
 };
@@ -62,7 +89,11 @@ TableRow.propTypes = {
     State: PropTypes.string,
     ReviewRequestedTime: PropTypes.string,
     MergedDate: PropTypes.string,
-    Author: PropTypes.string
+    Author: PropTypes.string,
+    deploy_status: PropTypes.string,
+    workflow_url: PropTypes.string,
+    PR_Iterations: PropTypes.number,
+    CycleTimeDisplay: PropTypes.string
   }).isRequired,
   index: PropTypes.number.isRequired
 };
