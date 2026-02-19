@@ -15,6 +15,9 @@
 .nav-tab {
   position: relative;
   white-space: nowrap;
+  border: none;
+  border-left: none;
+  border-right: none;
 }
 
 .nav-tab a {
@@ -26,6 +29,10 @@
   cursor: pointer;
   text-decoration: none;
   transition: color 0.2s;
+  border: none;
+  border-left: none;
+  border-right: none;
+  box-shadow: none;
 }
 
 .nav-tab a:hover {

@@ -5,6 +5,8 @@ import Navigation from './components/Navigation/Navigation';
 import DashboardOverview from './components/Dashboard/DashboardOverview';
 import ContributorInsights from './components/Contributors/ContributorInsights';
 import PullRequestTable from './components/PullRequests/PullRequestTable';
+import CICDMetrics from './components/CICDMetrics/CICDMetrics';
+import QEMetrics from './components/QEMetrics/QEMetrics';
 import { getDefaultDateRange, formatDateToISO } from './utils/dateUtils';
 import './App.css';
 
@@ -22,6 +24,9 @@ function App() {
   // State for ISO formatted dates to use in API calls
   const [isoStartDate, setIsoStartDate] = useState(formatDateToISO(defaultDateRange.startDate));
   const [isoEndDate, setIsoEndDate] = useState(formatDateToISO(defaultDateRange.endDate));
+  
+  // State for repository filter
+  const [selectedRepository, setSelectedRepository] = useState('');
   
   // Refresh key to trigger data reload in children
   const [refreshKey, setRefreshKey] = useState(0);
@@ -43,6 +48,14 @@ function App() {
   };
 
   /**
+   * Handle repository change from the repository filter
+   * @param {string} repository - Selected repository
+   */
+  const handleRepositoryChange = (repository) => {
+    setSelectedRepository(repository);
+  };
+
+  /**
    * Handle manual refresh by updating the refreshKey
    */
   const handleRefresh = () => {
@@ -55,6 +68,8 @@ function App() {
         startDate={startDate}
         endDate={endDate}
         onDateChange={handleDateChange}
+        selectedRepository={selectedRepository}
+        onRepositoryChange={handleRepositoryChange}
         onRefresh={handleRefresh}
       />
       <Navigation />
@@ -69,6 +84,7 @@ function App() {
                 endDate={endDate}
                 isoStartDate={isoStartDate}
                 isoEndDate={isoEndDate}
+                selectedRepository={selectedRepository}
                 refreshKey={refreshKey}
               />
             } 
@@ -79,6 +95,7 @@ function App() {
               <ContributorInsights 
                 isoStartDate={isoStartDate}
                 isoEndDate={isoEndDate}
+                selectedRepository={selectedRepository}
                 refreshKey={refreshKey}
               />
             } 
@@ -89,6 +106,29 @@ function App() {
               <PullRequestTable 
                 isoStartDate={isoStartDate}
                 isoEndDate={isoEndDate}
+                selectedRepository={selectedRepository}
+                refreshKey={refreshKey}
+              />
+            } 
+          />
+          <Route 
+            path="/cicd-metrics" 
+            element={
+              <CICDMetrics 
+                isoStartDate={isoStartDate}
+                isoEndDate={isoEndDate}
+                selectedRepository={selectedRepository}
+                refreshKey={refreshKey}
+              />
+            } 
+          />
+          <Route 
+            path="/qe-metrics" 
+            element={
+              <QEMetrics 
+                isoStartDate={isoStartDate}
+                isoEndDate={isoEndDate}
+                selectedRepository={selectedRepository}
                 refreshKey={refreshKey}
               />
             } 

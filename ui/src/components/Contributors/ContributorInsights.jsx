@@ -24,13 +24,15 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, ArcElement, LineElement
  * @param {Object} props - Component props
  * @param {string} props.isoStartDate - ISO formatted start date
  * @param {string} props.isoEndDate - ISO formatted end date
+ * @param {string} props.selectedRepository - Selected repository filter
  * @param {number} props.refreshKey - Numeric key that changes to trigger a data refresh in the component
  */
-const ContributorInsights = ({ isoStartDate, isoEndDate, refreshKey }) => {
+const ContributorInsights = ({ isoStartDate, isoEndDate, selectedRepository, refreshKey }) => {
   // Use custom hook for data fetching and state management
   const { contributorData, loading, error, refreshData } = useContributorData(
     isoStartDate, 
     isoEndDate, 
+    selectedRepository,
     refreshKey
   );
 

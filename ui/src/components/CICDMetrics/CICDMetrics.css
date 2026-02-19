@@ -1,0 +1,306 @@
+/**
+ * CICD Metrics Component Styles
+ * Follows the existing design patterns from Contributors and Dashboard components
+ */
+
+.cicd-metrics {
+  padding: 1.5rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Metric Cards Layout */
+.cicd-metrics-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+/* Charts Container */
+.cicd-charts-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+/* Chart Widget Styling */
+.cicd-chart-widget {
+  min-height: 400px;
+}
+
+.cicd-chart-widget .widget-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary, #1f2937);
+  margin-bottom: 0.5rem;
+}
+
+.cicd-chart-widget .widget-subtitle {
+  font-size: 0.875rem;
+  color: var(--text-secondary, #6b7280);
+  margin-bottom: 1.5rem;
+}
+
+/* Metric Card Small Font Styling */
+.metric-card-small-font .metric-card-value {
+  font-size: 1rem !important;
+  line-height: 1.2;
+  font-weight: 600;
+}
+
+/* Metric Card Small Value Styling - for specific metrics */
+.metric-card-small-value .metric-value {
+  font-size: 18px !important;
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+/* Stacked Bar Chart Container */
+.stacked-bar-chart {
+  height: 300px;
+  position: relative;
+}
+
+.stacked-bar-chart canvas {
+  max-height: 300px !important;
+}
+
+/* Horizontal Bar Chart Container */
+.horizontal-bar-chart {
+  height: 300px;
+  position: relative;
+}
+
+.horizontal-bar-chart canvas {
+  max-height: 300px !important;
+}
+
+/* Doughnut Chart Container */
+.doughnut-chart {
+  height: 300px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.doughnut-chart canvas {
+  max-height: 300px !important;
+  max-width: 100% !important;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .cicd-charts-container {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .cicd-metrics {
+    padding: 1rem;
+  }
+  
+  .cicd-metrics-cards {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .cicd-charts-container {
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .cicd-chart-widget {
+    min-height: 350px;
+  }
+  
+  .stacked-bar-chart {
+    height: 250px;
+  }
+  
+  .stacked-bar-chart canvas {
+    max-height: 250px !important;
+  }
+  
+  .horizontal-bar-chart {
+    height: 250px;
+  }
+  
+  .horizontal-bar-chart canvas {
+    max-height: 250px !important;
+  }
+  
+  .doughnut-chart {
+    height: 250px;
+  }
+  
+  .doughnut-chart canvas {
+    max-height: 250px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .cicd-metrics {
+    padding: 0.75rem;
+  }
+  
+  .cicd-metrics-cards {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+  
+  .cicd-chart-widget {
+    min-height: 300px;
+  }
+  
+  .stacked-bar-chart {
+    height: 200px;
+  }
+  
+  .stacked-bar-chart canvas {
+    max-height: 200px !important;
+  }
+  
+  .horizontal-bar-chart {
+    height: 200px;
+  }
+  
+  .horizontal-bar-chart canvas {
+    max-height: 200px !important;
+  }
+  
+  .doughnut-chart {
+    height: 200px;
+  }
+  
+  .doughnut-chart canvas {
+    max-height: 200px !important;
+  }
+}
+
+/* Loading and Error States */
+.cicd-metrics .loading-container,
+.cicd-metrics .error-container,
+.cicd-metrics .empty-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  text-align: center;
+  padding: 2rem;
+}
+
+.cicd-metrics .loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid var(--border-color, #e5e7eb);
+  border-top: 4px solid var(--primary-color, #8b5cf6);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.cicd-metrics .error-message {
+  color: var(--error-color, #ef4444);
+  font-size: 1.125rem;
+  margin-bottom: 1rem;
+}
+
+.cicd-metrics .empty-message {
+  color: var(--text-secondary, #6b7280);
+  font-size: 1.125rem;
+}
+
+.cicd-metrics .retry-button {
+  background-color: var(--primary-color, #8b5cf6);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.cicd-metrics .retry-button:hover {
+  background-color: var(--primary-hover, #7c3aed);
+}
+
+.cicd-metrics .retry-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.3);
+}
+
+/* Chart Specific Styles */
+.cicd-metrics .chart-container {
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+
+/* Accessibility Improvements */
+.cicd-metrics [role="button"] {
+  cursor: pointer;
+}
+
+.cicd-metrics [aria-label] {
+  position: relative;
+}
+
+/* Focus Styles for Keyboard Navigation */
+.cicd-metrics *:focus {
+  outline: 2px solid var(--focus-color, #3b82f6);
+  outline-offset: 2px;
+}
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+  .cicd-metrics {
+    --text-primary: #000000;
+    --text-secondary: #333333;
+    --border-color: #000000;
+    --primary-color: #0000ff;
+  }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .cicd-metrics .loading-spinner {
+    animation: none;
+  }
+  
+  .cicd-metrics * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .cicd-metrics {
+    padding: 0;
+    max-width: none;
+  }
+  
+  .cicd-charts-container {
+    grid-template-columns: 1fr;
+    page-break-inside: avoid;
+  }
+  
+  .cicd-chart-widget {
+    page-break-inside: avoid;
+    margin-bottom: 1rem;
+  }
+}

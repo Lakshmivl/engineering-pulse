@@ -10,7 +10,9 @@ const Navigation = () => {
   const tabs = [
     { id: 'dashboard', label: 'Engineering Velocity', path: '/dashboard' },
     { id: 'contributors', label: 'Leaderboard', path: '/contributors' },
-    { id: 'pullrequests', label: 'Review Queue', path: '/pullrequests' }
+    { id: 'pullrequests', label: 'Review Queue', path: '/pullrequests' },
+    { id: 'cicd', label: 'CI/CD Metrics', path: '/cicd-metrics' },
+    { id: 'qe', label: 'QE Metrics', path: '/qe-metrics' }
   ];
 
   return (

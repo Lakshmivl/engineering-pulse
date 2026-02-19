@@ -5,14 +5,16 @@ import { RefreshCcw } from 'lucide-react';
 import './Header.css';
 
 /**
- * Header component containing the logo, refresh button and date range picker
+ * Header component containing the logo, repository filter, refresh button and date range picker
  * @param {Object} props - Component props
  * @param {Date} props.startDate - Start date for date range
  * @param {Date} props.endDate - End date for date range
  * @param {Function} props.onDateChange - Callback function for date changes
+ * @param {string} props.selectedRepository - Selected repository
+ * @param {Function} props.onRepositoryChange - Callback function for repository changes
  * @param {Function} props.onRefresh - Callback function for page refresh
  */
-const Header = ({ startDate, endDate, onDateChange, onRefresh }) => {
+const Header = ({ startDate, endDate, onDateChange, selectedRepository, onRepositoryChange, onRefresh }) => {
   return (
     <header className="app-header">
       <div className="logo-container">
@@ -43,6 +45,19 @@ const Header = ({ startDate, endDate, onDateChange, onRefresh }) => {
         </div>
       </div>
       <div className="header-actions">
+        <select 
+          className="repository-filter"
+          value={selectedRepository}
+          onChange={(e) => onRepositoryChange(e.target.value)}
+          title="Filter by repository"
+        >
+          <option value="">Select Repository</option>
+          <option value="it-web-aem-website">it-web-aem-website</option>
+          <option value="it-web-sap-commerce">it-web-sap-commerce</option>
+          <option value="it-web-services">it-web-services</option>
+          <option value="it-web-cart-checkout">it-web-cart-checkout</option>
+          <option value="it-web-solr">it-web-solr</option>
+        </select>
         <DateRangePicker
           startDate={startDate}
           endDate={endDate}
@@ -64,6 +79,8 @@ Header.propTypes = {
   startDate: PropTypes.instanceOf(Date).isRequired,
   endDate: PropTypes.instanceOf(Date).isRequired,
   onDateChange: PropTypes.func.isRequired,
+  selectedRepository: PropTypes.string.isRequired,
+  onRepositoryChange: PropTypes.func.isRequired,
   onRefresh: PropTypes.func.isRequired
 };
 
